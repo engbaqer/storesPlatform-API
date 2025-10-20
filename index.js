@@ -8,8 +8,8 @@ import cors from 'cors';
 import productRoutes from './Routes/productRoutes.js';
 // import categoryRoutes from './Routes/categoryRoutes.js';
 import orderItemRoutes from './Routes/orderItemRoutes.js'
-// import dotenv from 'dotenv';
-// dotenv.config();nod
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
 app.use(cors());
 
