@@ -14,7 +14,10 @@ const app = express();
 app.use(cors());
 
 app.use(json());
-
+app.use('/', (req, res, next) => {
+  console.log("User route accessed".green);
+  next();
+});
 app.use('/users', userRoutes);
 app.use('/store', storeRoutes);
 app.use('/product', productRoutes);
@@ -25,6 +28,6 @@ app.use("/uploads", express.static("uploads"));
 /////////////////////////////////////////////////
 
 
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000".bgBlue.red);
+app.listen(3500, () => {
+  console.log("Server running on http://localhost:3500".bgBlue.red);
 });

@@ -2,7 +2,7 @@
 import Product from "..//model/product.js";
 
 const productController = {
-  createProduct: async (req, res) => {
+ createProduct: async (req, res) => {
   try {
     const {
       store_id,
@@ -13,7 +13,10 @@ const productController = {
       sku
     } = req.body;
 
-    const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+    let image_url = null;
+    if (req.file) {
+      image_url = req.file.path; // store the relative path to the file
+    }
 
     const productId = await Product.create(
       store_id,
@@ -34,6 +37,7 @@ const productController = {
     res.status(500).json({ message: "Server error" });
   }
 },
+
 
   getProductsByStore: async (req, res) => {
     try {

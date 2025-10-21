@@ -9,7 +9,7 @@ const router = express.Router();
 router.post(
   "/createProduct",
   authMiddleware,
-  upload.single("image"), // This handles the uploaded image
+  upload.single("logo"), // This handles the uploaded image
   productController.createProduct
 );
 // router.post("/createProduct", authMiddleware, productController.createProduct);
