@@ -17,15 +17,43 @@ const OrderItem = {
     const result = await db.query("SELECT * FROM order_items");
     return result.rows;
   },
+  
 
   // Get order items by store
-  findByStore: async (store_id) => {
+findByStore: async (store_id) => {
+  try {
     const result = await db.query(
-      "SELECT * FROM order_items WHERE store_id = $1",
+      `
+      SELECT
+        oi.id, 
+        oi.product_id,
+        oi.quantity,
+        oi.unit_price,
+        oi.store_id,
+        oi.status_of_orders,
+        p.name,
+        p.description,
+        p.price,
+        p.stock_qty,
+        p.sku,
+        p.image_url,
+        p.status
+      FROM order_items oi
+      INNER JOIN products p 
+        ON oi.product_id = p.id
+      WHERE p.store_id = $1
+      `,
       [store_id]
     );
     return result.rows;
-  },
+  } catch (error) {
+    console.error("Database query error:", error);
+    throw new Error("Server error");
+  }
+},
+
+
+
 
   // Get order item by ID
   findById: async (id) => {
@@ -44,6 +72,12 @@ const OrderItem = {
     values.push(id); // last parameter is id
     const query = `UPDATE order_items SET ${sets} WHERE id = $${keys.length + 1}`;
     await db.query(query, values);
+  },
+   updateStatus: async (id, status_of_orders) => {
+    await db.query(
+      `UPDATE order_items SET status_of_orders = $1 WHERE id = $2`,
+      [status_of_orders, id]
+    );
   },
 
   // Delete order item

@@ -1,9 +1,9 @@
 // config/db.js
 import pkg from "pg";
-const { Pool } = pkg;
 import dotenv from "dotenv";
-
 dotenv.config();
+
+const { Pool } = pkg;
 
 const pool = new Pool({
   host: process.env.DB_HOST,
@@ -12,12 +12,26 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
   ssl: {
-    rejectUnauthorized: false, // Needed for Neon, especially in free tier
+    rejectUnauthorized: false, // required for Railway/Neon/Render
   },
+  idleTimeoutMillis: 30000,       // Close idle connections after 30s
+  connectionTimeoutMillis: 10000, // Timeout for new connections
 });
 
-pool.connect()
-  .then(() => console.log("✅ Connected to PostgreSQL (Neon)"))
-  .catch((err) => console.error("❌ Database connection error:", err));
+// ✅ Handle unexpected errors gracefully
+pool.on("error", (err) => {
+  console.error("💥 Unexpected PostgreSQL error:", err.message);
+  // Do NOT exit the process — Pool will recover automatically
+});
+
+// ✅ Optional test query at startup
+(async () => {
+  try {
+    const res = await pool.query("SELECT NOW()");
+    console.log("✅ Connected to PostgreSQL:", res.rows[0].now);
+  } catch (err) {
+    console.error("❌ Database connection error:", err.message);
+  }
+})();
 
 export default pool;

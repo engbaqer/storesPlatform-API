@@ -71,6 +71,17 @@ const orderItemController = {
       res.status(500).json({ message: "Server error" });
     }
   },
+  changeOrderItemStatus: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status_of_orders } = req.body;
+      await OrderItem.updateStatus(id, status_of_orders);
+      res.json({ message: "Order item status updated" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server error"});
+    }
+  }
 };
 
 export default orderItemController;

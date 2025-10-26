@@ -27,6 +27,7 @@ const productController = {
       sku,
       image_url
     );
+    
 
     res.status(201).json({
       message: "Product created",
