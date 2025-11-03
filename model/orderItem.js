@@ -2,12 +2,12 @@ import db from "../config/db.js";
 
 const OrderItem = {
   // Create a new order item
-  create: async (store_id, product_id, quantity, unit_price) => {
+ create: async (store_id, product_id, quantity, unit_price, phone_number) => {
     const result = await db.query(
-      `INSERT INTO order_items (store_id, product_id, quantity, unit_price)
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO order_items (store_id, product_id, quantity, unit_price, phone_number)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING id`,
-      [store_id, product_id, quantity, unit_price]
+      [store_id, product_id, quantity, unit_price, phone_number]
     );
     return result.rows[0].id;
   },
@@ -31,6 +31,7 @@ findByStore: async (store_id) => {
         oi.unit_price,
         oi.store_id,
         oi.status_of_orders,
+        oi.phone_number,
         p.name,
         p.description,
         p.price,
@@ -87,3 +88,4 @@ findByStore: async (store_id) => {
 };
 
 export default OrderItem;
+ 

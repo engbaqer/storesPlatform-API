@@ -1,21 +1,24 @@
 import OrderItem from "../model/orderItem.js";
 
 const orderItemController = {
-  createOrderItem: async (req, res) => {
-    try {
-      const { store_id, product_id, quantity, unit_price } = req.body;
-      const id = await OrderItem.create(
-        store_id,
-        product_id,
-        quantity,
-        unit_price
-      );
-      res.status(201).json({ message: "Order item created", id });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Server error 6" });
-    }
-  },
+createOrderItem: async (req, res) => {
+  try {
+    const { store_id, product_id, quantity, unit_price, phone_number } = req.body;
+
+    const id = await OrderItem.create(
+      store_id,
+      product_id,
+      quantity,
+      unit_price,
+      phone_number
+    );
+
+    res.status(201).json({ message: "Order item created", id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+},
 
   getAllOrderItems: async (req, res) => {
     try {
@@ -72,16 +75,29 @@ const orderItemController = {
     }
   },
   changeOrderItemStatus: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { status_of_orders } = req.body;
-      await OrderItem.updateStatus(id, status_of_orders);
-      res.json({ message: "Order item status updated" });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Server error"});
+  try {
+    const { id } = req.params;
+
+    // Get current order item
+    const item = await OrderItem.findById(id);
+    if (!item) {
+      return res.status(404).json({ message: "Order item not found" });
     }
+
+    // Toggle between 1 and 2
+    const newStatus = item.status_of_orders === 1 ? 2 : 1;
+
+    await OrderItem.updateStatus(id, newStatus);
+
+    res.json({
+      message: `Order item status changed to ${newStatus}`,
+      newStatus,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
+},
 };
 
 export default orderItemController;
