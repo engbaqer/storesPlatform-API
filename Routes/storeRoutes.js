@@ -12,6 +12,7 @@ router.post(
   storeController.createStore
 );
 router.get("/getUserStores", authMiddleware, storeController.getUserStores);
+router.get("/getAllStores", storeController.getAllStores);
 router.put("/:id/suspend", authMiddleware, storeController.suspendStore);
 
 export default router;

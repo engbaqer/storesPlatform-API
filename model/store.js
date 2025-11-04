@@ -21,6 +21,14 @@ const Store = {
     return result.rows;
   },
 
+  // Find all stores in the platform
+  findAll: async () => {
+    const result = await db.query(
+      `SELECT * FROM stores ORDER BY id DESC`
+    );
+    return result.rows;
+  },
+
   // Find a store by ID
   findById: async (id) => {
     const result = await db.query(

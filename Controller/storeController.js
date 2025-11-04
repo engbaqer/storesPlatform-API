@@ -43,6 +43,16 @@ const storeController = {
     }
   },
 
+  getAllStores: async (req, res) => {
+    try {
+      const stores = await Store.findAll();
+      res.json(stores);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  },
+
   suspendStore: async (req, res) => {
     try {
       const { id } = req.params;

@@ -1,5 +1,10 @@
 {
    "type": "module",
+   "scripts": {
+      "migrate": "knex migrate:latest --env=development",
+      "migrate:rollback": "knex migrate:rollback --env=development",
+      "migrate:status": "knex migrate:status --env=development"
+   },
    "dependencies": {
       "bcrypt": "^6.0.0",
       "cloudinary": "^2.8.0",
