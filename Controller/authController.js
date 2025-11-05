@@ -19,9 +19,19 @@ const user = {
       const hash = await bcrypt.hash(password, 10);
       const userId = await User.create(name, email, hash, role);
 
+        const token = jwt.sign(
+        {
+          userId,
+          role,
+        },
+        process.env.JWT_SECRET
+      );
+
+
       res.status(201).json({
         message: "User created",
         userId,
+        token, 
       });
     } catch (err) {
       console.error(err);
